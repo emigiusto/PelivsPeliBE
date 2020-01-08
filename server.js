@@ -14,16 +14,14 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-
-app.get('/competencias',controller.traercompetencias);
-app.get('/competencias/:id',controller.competencia);
-app.get('/competencias/:id/peliculas',controller.traerpeliscompetencia);
-
 app.get('/generos',controller.traergeneros);
 app.get('/directores',controller.traerdirectores);
 app.get('/actores',controller.traeractores);
 
+app.get('/competencias',controller.traercompetencias);
+app.get('/competencias/:id/peliculas',controller.traerpeliscompetencia);
 app.get('/competencias/:idCompetencia/resultados',controller.traerresultadoscompetencia);
+app.get('/competencias/:id',controller.competencia);
 
 app.post('/competencias/:idCompetencia/voto/',controller.votarunacompetencia);
 app.post('/competencias',controller.crearcompetencia);
@@ -32,6 +30,7 @@ app.delete('/competencias/:idCompetencia/votos',controller.borrarvotos);
 app.delete('/competencias/:idCompetencia',controller.borrarcompetencia);
 
 app.put('/competencias/:idCompetencia',controller.editarcompetencia);
+
 
 app.get('/',function (req, res) {
   res.send('Helloooo to Peli vs Peli App');
