@@ -81,6 +81,7 @@ function traerpeliscompetencia(req, res) {
                 +   "pelicula.genero_id LIKE CASE WHEN (tcompetencias.genero_id IS NULL = 1) THEN '%' ELSE tcompetencias.genero_id END "
                 +   "AND tdirectores.director_id LIKE CASE WHEN (tcompetencias.director_id IS NULL = 1) THEN '%' ELSE tcompetencias.director_id END "
                 +   "AND tactores.actor_id LIKE CASE WHEN (tcompetencias.actor_id IS NULL = 1) THEN '%' ELSE tcompetencias.actor_id END "
+                +   " group by pelicula.id "
                 +   "ORDER BY RAND() LIMIT 2;"
                     
         con.query(sql, function(error, arraypeliculasrandom) {
