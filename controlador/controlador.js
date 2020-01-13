@@ -94,9 +94,12 @@ function traerpeliscompetencia(req, res) {
                     competencia: arraypeliculasrandom[0].nombre,
                     peliculas: arraypeliculasrandom
                 }
+                res.send(JSON.stringify(results));
             }
-
-            res.send(JSON.stringify(results));
+            if (arraypeliculasrandom.length==0){
+                return res.status(404).send("No hay una competencia con el id requerido");
+            }
+            
         });
     }
 
@@ -194,7 +197,7 @@ function traerpeliscompetencia(req, res) {
     //GUIA 3 PUNTO 2
     function borrarvotos(req, res) {
         var idCompetencia = req.params.idCompetencia;
-        
+        console.log(idCompetencia)
         var sql = "DELETE FROM votos WHERE competencia_id = " + idCompetencia
         con.query(sql, function(error, result) {
             if (error) {
