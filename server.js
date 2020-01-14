@@ -34,7 +34,7 @@ app.delete('/competencias/:idCompetencia',controller.borrarcompetencia);
 app.put('/competencias/:idCompetencia',controller.editarcompetencia);
 
 app.get('/',function (req, res) {
-  res.send('Helloooo to Peli vs Peli App');
+  res.send('Helloooo to Peli vs Peli App de Emi Giusto');
 });
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación
 var puerto = process.env.PORT || 8080;
