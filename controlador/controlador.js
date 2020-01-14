@@ -78,9 +78,9 @@ function traerpeliscompetencia(req, res) {
                 +   " JOIN (SELECT director_id, pelicula_id FROM director_pelicula) AS tdirectores ON tdirectores.pelicula_id = pelicula.id "
                 +   "JOIN (SELECT actor_id, pelicula_id FROM actor_pelicula) AS tactores ON tactores.pelicula_id = pelicula.id "
                 +   "WHERE "
-                +   "pelicula.genero_id LIKE CASE WHEN (tcompetencias.genero_id IS NULL = 1) THEN '%' ELSE tcompetencias.genero_id END "
-                +   "AND tdirectores.director_id LIKE CASE WHEN (tcompetencias.director_id IS NULL = 1) THEN '%' ELSE tcompetencias.director_id END "
-                +   "AND tactores.actor_id LIKE CASE WHEN (tcompetencias.actor_id IS NULL = 1) THEN '%' ELSE tcompetencias.actor_id END "
+                +   "pelicula.genero_id LIKE CASE WHEN (tcompetencias.genero_id = 0) THEN '%' ELSE tcompetencias.genero_id END "
+                +   "AND tdirectores.director_id LIKE CASE WHEN (tcompetencias.director_id = 0) THEN '%' ELSE tcompetencias.director_id END "
+                +   "AND tactores.actor_id LIKE CASE WHEN (tcompetencias.actor_id = 0) THEN '%' ELSE tcompetencias.actor_id END "
                 +   " group by pelicula.id "
                 +   "ORDER BY RAND() LIMIT 2;"
         console.log(sql)
