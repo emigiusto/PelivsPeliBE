@@ -151,15 +151,52 @@ function traerpeliscompetencia(req, res) {
 
     function crearcompetencia(req, res) {
         var competencia = req.body;
-        var sql = "INSERT INTO `competencias` VALUES (NULL,'"+ competencia.nombre +"',"+ competencia.genero +","+competencia.director +","+competencia.actor+")";
-        con.query(sql, function(error, result) {
-                if (error) {
-                    console.log(error)
-                    console.log("Hubo un error en la consulta", error.message);
-                    return res.status(404).send("No pudo crearse la competencia");
-                }
-                res.send("Competencia Creada exitosamente");
-            });
+
+        var sql0 =  "SELECT * from pelicula left outer join director_pelicula on director_pelicula.pelicula_id = pelicula.id left outer join actor_pelicula ON actor_pelicula.pelicula_id = pelicula.id "
+                +   "where director_pelicula.director_id like " + (competencia.director=='0' ? "'%'" : competencia.director)
+                +   " and actor_pelicula.actor_id like "+ (competencia.actor=='0' ? "'%'" : competencia.actor)
+                +   " and pelicula.genero_id like "+ (competencia.genero=='0' ? "'%'" : competencia.genero)
+                +   " group by pelicula.id;"
+                
+        //CHEQUEO SI LA COMPETENCIA TIENE AL MENOS DOS PELICULAS
+        con.query(sql0, function(error, result) {
+            if (error) {
+                console.log(error)
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(404).send("No pudo crearse la competencia");
+            }
+            
+            if (result.length <2) {
+                // NO HAY DOS PELICULAS QUE CUMPLAN CON LAS CONDICIONES DE GENERO, ACTOR Y DIRECTOR
+                res.status(422).send("Error: Debe haber al menos dos películas que cumplan con los requisitos.");
+            } else {
+                var sql1 = "select * from competencias where nombre = '" + competencia.nombre + "'"
+                //SE BUSCA COMPETENCIA CON EL MISMO NOMBRE
+                con.query(sql1, function(error, result) {
+                    if (error) {
+                        console.log(error)
+                        console.log("Hubo un error en la consulta", error.message);
+                        return res.status(404).send("No pudo crearse la competencia");
+                    }
+                    
+                    if (result.length == 0) {
+                        //NO HAY DOS COMPETENCIAS CON EL MISMO NOMBRE - >> SE CREA LA COMPETENCIA NUEVA
+                        var sql2 = "INSERT INTO `competencias` VALUES (NULL,'"+ competencia.nombre +"',"+ competencia.genero +","+competencia.director +","+competencia.actor+")";
+                        con.query(sql2, function(error, result) {
+                                if (error) {
+                                    console.log(error)
+                                    console.log("Hubo un error en la consulta", error.message);
+                                    return res.status(404).send("No pudo crearse la competencia");
+                                }
+                            res.send("Competencia Creada exitosamente");
+                        });
+                    } else {
+                        // EXISTE OTRA COMPETENCIA CON ESE NOMBRE
+                        res.status(422).send("Error: Ya existe una competencia con ese nombre, por favor modificarlo");
+                    }
+                });
+            }
+        })
     }
 
     function borrarcompetencia(req, res) {
@@ -197,16 +234,27 @@ function traerpeliscompetencia(req, res) {
     //GUIA 3 PUNTO 2
     function borrarvotos(req, res) {
         var idCompetencia = req.params.idCompetencia;
-        console.log(idCompetencia)
-        var sql = "DELETE FROM votos WHERE competencia_id = " + idCompetencia
-        con.query(sql, function(error, result) {
+        var sql1 = "Select id FROM competencias WHERE id = " + idCompetencia
+        con.query(sql1, function(error, result) {
             if (error) {
-                console.log(error)
                 console.log("Hubo un error en la consulta", error.message);
-                return res.status(404).send("La competencia no existe");
+                return res.status(404).send("Hubo un error en la consulta");
             }
-            res.send("Competencia Reiniciada exitosamente");
+
+            if (result.length > 0) {
+                var sql2 = "DELETE FROM votos WHERE competencia_id = " + idCompetencia
+                con.query(sql2, function(error, result) {
+                    if (error) {
+                        console.log("Hubo un error en la consulta", error.message);
+                        return res.status(404).send("Hubo un error en la consulta");
+                    }
+                    res.send("Competencia Reiniciada exitosamente");
+                });
+            } else {
+                res.status(404).send("La competencia a reiniciar no existe");
+            }
         });
+        
     }
     
     
