@@ -6,7 +6,7 @@ function traercompetencias(req, res) {
     
             con.query(sql, function(error, resultado) {
         if (error) {
-            console.log("Hubo un error en la consulta", error.message);
+            console.log("Hubo un error en la consulta de traercompetencias", error.message);
             return res.status(404).send("Hubo un error en la consulta");
         }
 
@@ -20,7 +20,7 @@ function traergeneros(req, res) {
     con.query(sql, function(error, result) {
         if (error) {
             console.log(error)
-            console.log("Hubo un error en la consulta", error.message);
+            console.log("Hubo un error en la consulta de traergeneros", error.message);
             return res.status(404).send("No pudo crearse la competencia");
         }
         res.send(result);
@@ -32,7 +32,7 @@ function traerdirectores(req, res) {
     con.query(sql, function(error, result) {
         if (error) {
             console.log(error)
-            console.log("Hubo un error en la consulta", error.message);
+            console.log("Hubo un error en la consulta de traerdirectores", error.message);
             return res.status(404).send("No pudo crearse la competencia");
         }
         res.send(result);
@@ -44,7 +44,7 @@ function traeractores(req, res) {
     con.query(sql, function(error, result) {
         if (error) {
             console.log(error)
-            console.log("Hubo un error en la consulta", error.message);
+            console.log("Hubo un error en la consulta de traeractores", error.message);
             return res.status(404).send("No pudo crearse la competencia");
         }
         res.send(result);
@@ -58,7 +58,7 @@ function competencia(req, res) {
             + " where competencias.id =" + idCompetencia
             con.query(sql, function(error, resultado) {
         if (error) {
-            console.log("Hubo un error en la consulta", error.message);
+            console.log("Hubo un error en la consulta de compentencia", error.message);
             return res.status(404).send("Hubo un error en la consulta");
         }
         res.send(JSON.stringify(resultado));
@@ -83,10 +83,10 @@ function traerpeliscompetencia(req, res) {
                 +   "AND tactores.actor_id LIKE CASE WHEN (tcompetencias.actor_id = 0) THEN '%' ELSE tcompetencias.actor_id END "
                 +   " group by pelicula.id "
                 +   "ORDER BY RAND() LIMIT 2;"
-        console.log(sql)
+
         con.query(sql, function(error, arraypeliculasrandom) {
             if (error) {
-                console.log("Hubo un error en la consulta", error.message);
+                console.log("Hubo un error en la consulta traerpeliscompetencia", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
             }
             if (arraypeliculasrandom.length>0){
@@ -97,7 +97,7 @@ function traerpeliscompetencia(req, res) {
                 res.send(JSON.stringify(results));
             }
             if (arraypeliculasrandom.length==0){
-                console.log("No hay peliculas para votar en la competencia" + idCompetencia)
+                console.log("No hay peliculas para votar en la competencia de id: " + idCompetencia)
                 return res.status(404).send("No hay peliculas para votar en esta competencia");
             }
             
@@ -118,7 +118,7 @@ function traerpeliscompetencia(req, res) {
                     return res.status(404).send("Hubo un error en la consulta");
                 }
     
-                res.send("Voto Ok");
+                res.send("Voto Ok de la peli con id: " + votoPeli + " en la competencia de id: " + idCompetencia);
             });
     }
         
@@ -163,7 +163,7 @@ function traerpeliscompetencia(req, res) {
         con.query(sql0, function(error, result) {
             if (error) {
                 console.log(error)
-                console.log("Hubo un error en la consulta", error.message);
+                console.log("No pudo crearse la competencia por un error en sql0", error.message);
                 return res.status(404).send("No pudo crearse la competencia");
             }
             
@@ -176,7 +176,7 @@ function traerpeliscompetencia(req, res) {
                 con.query(sql1, function(error, result) {
                     if (error) {
                         console.log(error)
-                        console.log("Hubo un error en la consulta", error.message);
+                        console.log("No pudo crearse la competencia por un error en sql1", error.message);
                         return res.status(404).send("No pudo crearse la competencia");
                     }
                     
@@ -186,13 +186,14 @@ function traerpeliscompetencia(req, res) {
                         con.query(sql2, function(error, result) {
                                 if (error) {
                                     console.log(error)
-                                    console.log("Hubo un error en la consulta", error.message);
+                                    console.log("No pudo crearse la competencia por un error en sql2", error.message);
                                     return res.status(404).send("No pudo crearse la competencia");
                                 }
-                            res.send("Competencia Creada exitosamente");
+                            res.send("Competencia Creada exitosamente: " + competencia.nombre);
                         });
                     } else {
                         // EXISTE OTRA COMPETENCIA CON ESE NOMBRE
+                        console.log("Error: Ya existe una competencia con nombre " + competencia.nombre + " , por favor modificarlo")
                         res.status(422).send("Error: Ya existe una competencia con ese nombre, por favor modificarlo");
                     }
                 });
@@ -205,10 +206,10 @@ function traerpeliscompetencia(req, res) {
         var sql = "DELETE FROM competencias WHERE id =" + idCompetencia + ";"
         con.query(sql, function(error, result) {
                 if (error) {
-                    console.log("Hubo un error en la consulta", error.message);
+                    console.log("No pudo borrarse la competencia", error.message);
                     return res.status(404).send("No pudo borrarse la competencia");
                 }
-                res.send("Competencia Borrada Exitosamente");
+                res.send("Competencia de id: "+ idCompetencia + " borrada exitosamente");
             });
     }
 
@@ -224,10 +225,10 @@ function traerpeliscompetencia(req, res) {
 
         con.query(sql, function(error, result) {
                 if (error) {
-                    console.log("Hubo un error en la consulta", error.message);
+                    console.log("No pudo editarse la competencia", error.message);
                     return res.status(404).send("No pudo editarse la competencia");
                 }
-                res.send("Competencia Editada Exitosamente");
+                res.send("Competencia de id " + idCompetencia + " editada exitosamente");
             });
     }
     
@@ -249,9 +250,10 @@ function traerpeliscompetencia(req, res) {
                         console.log("Hubo un error en la consulta", error.message);
                         return res.status(404).send("Hubo un error en la consulta");
                     }
-                    res.send("Competencia Reiniciada exitosamente");
+                    res.send("Competencia de id "+ idCompetencia + " reiniciada exitosamente");
                 });
             } else {
+                console.log("La competencia a reiniciar de id " + idCompetencia + " no existe");
                 res.status(404).send("La competencia a reiniciar no existe");
             }
         });
