@@ -83,7 +83,7 @@ function traerpeliscompetencia(req, res) {
                 +   "AND tactores.actor_id LIKE CASE WHEN (tcompetencias.actor_id IS NULL = 1) THEN '%' ELSE tcompetencias.actor_id END "
                 +   " group by pelicula.id "
                 +   "ORDER BY RAND() LIMIT 2;"
-                    
+        console.log(sql)
         con.query(sql, function(error, arraypeliculasrandom) {
             if (error) {
                 console.log("Hubo un error en la consulta", error.message);
