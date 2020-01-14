@@ -97,7 +97,7 @@ function traerpeliscompetencia(req, res) {
                 res.send(JSON.stringify(results));
             }
             if (arraypeliculasrandom.length==0){
-                return res.status(404).send("No hay una competencia con el id requerido");
+                return res.status(404).send("No hay peliculas para votar en esta competencia");
             }
             
         });
