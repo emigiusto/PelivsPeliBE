@@ -97,6 +97,7 @@ function traerpeliscompetencia(req, res) {
                 res.send(JSON.stringify(results));
             }
             if (arraypeliculasrandom.length==0){
+                console.log("No hay peliculas para votar en la competencia" + idCompetencia)
                 return res.status(404).send("No hay peliculas para votar en esta competencia");
             }
             
